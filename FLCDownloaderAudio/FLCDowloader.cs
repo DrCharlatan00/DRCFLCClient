@@ -16,6 +16,15 @@ namespace FLCDownloaderAudio
         }
 
         public async Task DownloadFlcAsync(string name, string FilePath) {
+            try
+            {
+                httpClient.GetAsync("/version");
+            }
+            catch
+            {
+                throw new Exceptions.NoAvaibleConnectToServer("Err whis connect to Flac Server");
+            }
+            
             var response = await httpClient.GetAsync($"audio/{name}", HttpCompletionOption.ResponseHeadersRead);
             response.EnsureSuccessStatusCode();
 
@@ -27,7 +36,11 @@ namespace FLCDownloaderAudio
 
         public async Task<List<string>> GetMusicListAsync() {
             var list = await httpClient.GetFromJsonAsync<List<string>>("/list");
-            return list ?? new List<string>();
+            if (list is null)
+            {
+                throw new Exceptions.NullListAvaibleFlacMusic("Null list Music, Check Music folder!");
+            }
+            return list;
         }
 
 
