@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DRCFooBar\DRCFooBar.csproj" />
     <ProjectReference Include="..\FLCDownloaderAudio\FLCDownloaderAudio.csproj" />
   </ItemGroup>
 

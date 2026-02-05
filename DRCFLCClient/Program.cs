@@ -1,4 +1,5 @@
-﻿//#define LoadFromCode
+﻿#define LoadFromCode
+using DRCFLCClient;
 using FLCDownloaderAudio;
 
 internal class Program
@@ -10,19 +11,19 @@ internal class Program
         public string Port;
         public ConnectionSetting()
         {
-
+            EnvReader.Load(".env");
 #if LoadFromCode
-    Ip_Serv = "192.168.1.50";
-    Port = "5000";
+    Ip_Serv = "localhost";
+    Port = "5213";
     return;
 #endif
-    Ip_Serv = Environment.GetEnvironmentVariable("IP_SERV");
-    Port = Environment.GetEnvironmentVariable("PORT");
-    if(Ip_Serv == string.IsNullOrWhiteSpace())
+        Ip_Serv = Environment.GetEnvironmentVariable("IP_SERV");
+        Port = Environment.GetEnvironmentVariable("PORT");
+        if (string.IsNullOrWhiteSpace(Ip_Serv))
             {
                 throw new Exception($"{nameof(Ip_Serv)} is null");
             }
-    if(Port == string.IsNullOrWhiteSpace())
+        if (string.IsNullOrWhiteSpace(Port))
             {
                 throw new Exception($"{nameof(Port)} is null");
             }
@@ -33,58 +34,116 @@ internal class Program
     }
 
     
-    public static List<string> ListAudio;
-    
+    public static List<string>? ListAudio;
+
     private static async Task Main(string[] args)
     {
+
         ConnectionSetting connection = new();
 
 #if DEBUG
-Console.WriteLine("Try Connect to Server FLAC");
+        Console.WriteLine("Try Connect to Server FLAC");
 #endif
 
 
-        if( args is not null )
-        { 
-            if(args == "list")
+        if (args is not null)
+        {
+            foreach (string val in args)
             {
-                var client = new FLCDowloader($"http://{connection.Ip_Serv}:{connection.Port}");
-                ListAudio =  await client.GetMusicListAsync();
-                if(ListAudio is not null)
+                if (val == "list")
                 {
-                    int count = 0;
-                    foreach (var Audio in ListAudio)
+                    var clientList = new FLCDowloader($"http://{connection.Ip_Serv}:{connection.Port}", false);
+                    ListAudio = await clientList.GetMusicListAsync();
+                    if (ListAudio is not null)
                     {
-                        count++;
-                        Console.WriteLine($"№ {count}: {Audio}");
+                        int count = 0;
+                        foreach (var Audio in ListAudio)
+                        {
+                            count++;
+                            Console.WriteLine($"№ {count}: {Audio}");
+                        }
                     }
-                }        
-            }   
+                }
+            }
         }
-        try{
-        var client = new FLCDowloader("http://192.168.1.50:5000");
+        try {
+            var clientTest = new FLCDowloader("http://192.168.1.50:5000", false);
         }
-        catch  (Exceptions.NoAvaibleConnectToServer)
+        catch (Exceptions.NoAvaibleConnectToServer)
         {
             Console.WriteLine("No Avaible to connect Flac server");
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine("Sorry unexpected error");
             Task.Delay(3000);
             Environment.Exit(-1);
         }
 
+        var client = new FLCDowloader($"http://{connection.Ip_Serv}:{connection.Port}", true);
+
         try
         {
-        ListAudio = await client.GetMusicListAsync();    
+            ListAudio = await client.GetMusicListAsync();
         }
-        catch(Exceptions.NullListAvaibleFlacMusic exs)
+        catch (Exceptions.NullListAvaibleFlacMusic exs)
         {
-            Console.WriteLine(exs.message);
+            Console.WriteLine(exs.Message);
         }
-        
+        int counter = 0;
+        foreach (var Audio in ListAudio)
+        {
+            counter++;
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Accessible Music: ");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"{counter}: {Audio}");
 
-        //await client.DownloadFlcAsync("Alorn On Danse.flac", "resp.flac");
+        }
+        PullList PullAudioList = new();
+        while (true)
+        {
+            Console.Write("Write Audio: ");
+            var AudioName = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(AudioName))
+            {
+                Console.WriteLine("No pls again");
+            }
+            else if (AudioName == "exit") {
+                Environment.Exit(0);
+            }
+            bool status = true;
+            if (AudioName.Contains(".flac")) {
+                try
+                {
+                    await client.DownloadFlcAsync(AudioName, $"{AudioName.ToLower()}.flac");
+                }
+                catch {
+                    Console.WriteLine("No find or Error on FLCServer");
+                    status = false;
+                }
+            }
+            else {
+                try
+                {
+                    await client.DownloadFlcAsync(AudioName += ".flac", $"{AudioName.ToLower()}.flac");
+                }
+                catch
+                {
+                    status = false;
+                    Console.WriteLine("No find or Error on FLCServer");
+                }
+            }
+            if (status) {
+#error Check This pls)
+                PullAudioList.SendToPull(AudioName);
+                Console.ForegroundColor = ConsoleColor.Green;
+                
+                Console.WriteLine("PASS");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+                
+           
+        }
     }
 }

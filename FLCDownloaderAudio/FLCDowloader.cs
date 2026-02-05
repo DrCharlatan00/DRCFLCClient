@@ -8,17 +8,33 @@ namespace FLCDownloaderAudio
     public class FLCDowloader
     {
         public readonly HttpClient httpClient;
-        public FLCDowloader(string HttpURL) {
+        public FLCDowloader(string HttpURL, bool SkipCheckConnection) {
             httpClient = new HttpClient
             {
                 BaseAddress = new Uri(HttpURL)
             };
+            if (SkipCheckConnection) return;
+            try
+            {
+                var dt = httpClient.GetStringAsync("/alive");
+                if (dt is null) {
+                    throw new Exceptions.NoAvaibleConnectToServer();
+                }
+            }
+            catch
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Err to ping FLCServer");
+                Console.ForegroundColor = ConsoleColor.White;
+                Task.Delay(500);
+                Environment.Exit(-2);
+            }
         }
 
         public async Task DownloadFlcAsync(string name, string FilePath) {
             try
             {
-                httpClient.GetAsync("/version");
+                await httpClient.GetAsync("/alive");
             }
             catch
             {
