@@ -2,6 +2,7 @@
 //    #define NoUseUnsafeCode
 using DRCFLCClient;
 using FLCDownloaderAudio;
+using System.Text;
 
 internal class Program
 {
@@ -41,6 +42,8 @@ internal class Program
 
     private static async Task Main(string[] args)
     {
+        Console.InputEncoding = Encoding.UTF8;
+        Console.OutputEncoding = Encoding.UTF8;
         //Task.Run(()=> {});
         PullAudioList = new();
         ConnectionSetting connection = new();
