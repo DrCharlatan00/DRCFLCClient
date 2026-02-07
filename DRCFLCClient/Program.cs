@@ -1,4 +1,4 @@
-﻿#define LoadFromCode
+﻿//#define LoadFromCode
 //    #define NoUseUnsafeCode
 using DRCFLCClient;
 using FLCDownloaderAudio;
@@ -116,20 +116,58 @@ internal class Program
             if (string.IsNullOrWhiteSpace(AudioName))
             {
                 Console.WriteLine("No pls again");
+                continue;
             }
-            else if (AudioName == "exit" || AudioName == "e") {
+            else if (AudioName.ToLower() == "exit" || AudioName.ToLower() == "e") {
                 Environment.Exit(0);
             }
-            else if (AudioName == "i"){
+            else if (AudioName.ToLower() == "i") {
                 string audio = NavigateListAudio.NavigateList<string>(AudioNames);
-                PullAudioList.AddToList(audio);
+                foreach (var Audio in AudioNames)
+                {
+                    if (audio == Audio) {
+                        await client.DownloadFlcAsync(audio, $"{audio.ToLower()}");
+                        PullAudioList.AddToList(audio);
+                    }
+                }
+
+                continue;
+            }
+            else if (AudioName.ToLower() == "push" || AudioName.ToLower() == "p") {
+                PullAudioList.SendToPull(false);
+                continue;
+            }
+            else if (AudioName.ToLower() == "lpush" || AudioName.ToLower() == "lp")
+            {
+                PullAudioList.SendToPull(true);
+                continue;
+            }
+            else if (AudioName.ToLower() == "rm")
+            {
+                string[] flacFiles = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.flac");
+                foreach (var item in flacFiles)
+                {
+                    Console.WriteLine($"Remove Files: {item}");
+                    File.Delete(item);
+                   
+                }
+                continue;
+            }
+            else if (AudioName == "list")
+            {
+                Console.Clear();
+                foreach (var item in PullAudioList.PullNames)
+                {
+                    Console.WriteLine(item);
+                }
+
                 continue;
             }
             bool status = true;
             if (AudioName.Contains(".flac")) {
                 try
                 {
-                    await client.DownloadFlcAsync(AudioName, $"{AudioName.ToLower()}");
+                    await client.DownloadFlcAsync(AudioName, $"{AppDomain.CurrentDomain.BaseDirectory} \\ {AudioName.ToLower()}");
                 }
                 catch {
                     Console.WriteLine("No find or Error on FLCServer");
@@ -139,7 +177,7 @@ internal class Program
             else {
                 try
                 {
-                    await client.DownloadFlcAsync(AudioName += ".flac", $"{AudioName.ToLower()}.flac");
+                    await client.DownloadFlcAsync(AudioName += ".flac", $" {AppDomain.CurrentDomain.BaseDirectory} \\ {AudioName.ToLower()}.flac");
                 }
                 catch
                 {

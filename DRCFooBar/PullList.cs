@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.Json;
 
 
@@ -8,9 +10,13 @@ namespace DRCFLCClient
     {
         public List<string> PullNames = new List<string>();
 
-        public async void SendToPull(string AudioName) {
-            PullNames.Add(AudioName);
-            await AddTrackAsync(AudioName);
+        public async void SendToPull(bool Local) {
+            foreach (var item in PullNames)
+            {
+                await AddTrackAsync(item);
+            }
+            PullNames.Clear();
+            
         }
 
         public void AddToList(string AudioName){
@@ -21,19 +27,20 @@ namespace DRCFLCClient
 
         }
 
-        private async Task<(bool Ok, string? err)> AddTrackAsync(string name) {
-            if (!System.IO.File.Exists(name)) {
-                return (false, "No file");
-            }
-            var fl = Directory.GetCurrentDirectory() + name;
-            using (HttpClient client = new()) {
-                var body = new { items = new[] { "file:///" +  fl.Replace("\\", "/") } };
-                var json = JsonSerializer.Serialize(body); 
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-                await client.PostAsync("http://localhost:8880/api/player/enqueue", content);
-            }
-            return (true, null);
+        private async Task<(bool Ok, string? err)> AddTrackAsync(string name)
+        {
+            var args = string.Join(" ", PullNames.Select(f => $"\"{f}\""));
+            
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) { 
+                Console.WriteLine("Pushing");
+                Process.Start(new ProcessStartInfo { FileName = @"C:\Program Files\foobar2000\foobar2000.exe", Arguments = args, UseShellExecute = true });
+                Console.WriteLine("End Push");
+            } 
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) { Console.WriteLine("Linux no avaible"); }
 
+
+            return (true, null);
         }
+
     }
 }
