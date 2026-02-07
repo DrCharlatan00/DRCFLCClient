@@ -148,8 +148,8 @@ internal class Program
                 foreach (var item in flacFiles)
                 {
                     Console.WriteLine($"Remove Files: {item}");
-                    File.Delete(item);
-                   
+                    File.Delete(item); //this
+#warning Add Try catch to another proccess
                 }
                 continue;
             }
