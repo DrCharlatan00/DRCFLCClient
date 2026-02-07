@@ -13,6 +13,14 @@ namespace DRCFLCClient
             await AddTrackAsync(AudioName);
         }
 
+        public void AddToList(string AudioName){
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"Add to Pull list {AudioName}");
+            Console.ForegroundColor = ConsoleColor.White;
+            PullNames.Add(AudioName);
+
+        }
+
         private async Task<(bool Ok, string? err)> AddTrackAsync(string name) {
             if (!System.IO.File.Exists(name)) {
                 return (false, "No file");

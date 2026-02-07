@@ -1,4 +1,5 @@
 ﻿#define LoadFromCode
+//    #define NoUseUnsafeCode
 using DRCFLCClient;
 using FLCDownloaderAudio;
 
@@ -35,10 +36,13 @@ internal class Program
 
     
     public static List<string>? ListAudio;
+    public static PullList PullAudioList;
+    
 
     private static async Task Main(string[] args)
     {
-
+        Task.Run(()=> {});
+        PullAudioList = new();
         ConnectionSetting connection = new();
 
 #if DEBUG
@@ -64,9 +68,11 @@ internal class Program
                         }
                     }
                 }
+                
             }
         }
         try {
+            #warning Replace ip
             var clientTest = new FLCDowloader("http://192.168.1.50:5000", false);
         }
         catch (Exceptions.NoAvaibleConnectToServer)
@@ -91,16 +97,18 @@ internal class Program
             Console.WriteLine(exs.Message);
         }
         int counter = 0;
+        List<string> AudioNames = new();
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("Accessible Music: ");
+        Console.ForegroundColor = ConsoleColor.White;
         foreach (var Audio in ListAudio)
         {
             counter++;
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Accessible Music: ");
-            Console.ForegroundColor = ConsoleColor.White;
+            AudioNames.Add(Audio);
             Console.WriteLine($"{counter}: {Audio}");
 
         }
-        PullList PullAudioList = new();
+        
         while (true)
         {
             Console.Write("Write Audio: ");
@@ -109,14 +117,19 @@ internal class Program
             {
                 Console.WriteLine("No pls again");
             }
-            else if (AudioName == "exit") {
+            else if (AudioName == "exit" || AudioName == "e") {
                 Environment.Exit(0);
+            }
+            else if (AudioName == "i"){
+                string audio = NavigateListAudio.NavigateList<string>(AudioNames);
+                PullAudioList.AddToList(audio);
+                continue;
             }
             bool status = true;
             if (AudioName.Contains(".flac")) {
                 try
                 {
-                    await client.DownloadFlcAsync(AudioName, $"{AudioName.ToLower()}.flac");
+                    await client.DownloadFlcAsync(AudioName, $"{AudioName.ToLower()}");
                 }
                 catch {
                     Console.WriteLine("No find or Error on FLCServer");
@@ -135,12 +148,11 @@ internal class Program
                 }
             }
             if (status) {
-#error Check This pls)
-                PullAudioList.SendToPull(AudioName);
-                Console.ForegroundColor = ConsoleColor.Green;
-                
+//#error Check This pls)
+                PullAudioList.AddToList(AudioName);
+                Console.BackgroundColor = ConsoleColor.Green;
                 Console.WriteLine("PASS");
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.BackgroundColor = ConsoleColor.Black;
             }
                 
            

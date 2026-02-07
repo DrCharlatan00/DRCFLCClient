@@ -1,4 +1,6 @@
-﻿using System.Net.Http;
+﻿#define CheckAliveConnect
+
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Runtime.InteropServices.Marshalling;
 using static System.Net.WebRequestMethods;
@@ -20,6 +22,21 @@ namespace FLCDownloaderAudio
                 if (dt is null) {
                     throw new Exceptions.NoAvaibleConnectToServer();
                 }
+                
+                    
+                #if CheckAliveConnect
+                Console.WriteLine("iswork");
+                Task.Run(async () => {
+                    while(true){
+                        Task.Delay(300);
+                       await CheckAlive();
+                    }
+                });
+                
+                #endif
+
+                
+
             }
             catch
             {
@@ -57,6 +74,16 @@ namespace FLCDownloaderAudio
                 throw new Exceptions.NullListAvaibleFlacMusic("Null list Music, Check Music folder!");
             }
             return list;
+        }
+
+
+        public async Task CheckAlive(){
+            try{
+                await httpClient.GetAsync("/alive");
+            }
+            catch{
+                throw new Exceptions.NoAvaibleConnectToServer("Not answer on server");
+            }
         }
 
 
