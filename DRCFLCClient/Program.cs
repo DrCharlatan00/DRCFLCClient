@@ -41,7 +41,7 @@ internal class Program
 
     private static async Task Main(string[] args)
     {
-        Task.Run(()=> {});
+        //Task.Run(()=> {});
         PullAudioList = new();
         ConnectionSetting connection = new();
 
@@ -81,8 +81,8 @@ internal class Program
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Sorry unexpected error");
-            Task.Delay(3000);
+            Console.WriteLine($"Sorry unexpected error {ex.Message}");
+            await Task.Delay(3000);
             Environment.Exit(-1);
         }
 
