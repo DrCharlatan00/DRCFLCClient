@@ -7,9 +7,8 @@ class EnvReader
     {
         if (!File.Exists(filePath))
         {
-#warning Change
-            //Change !!!
-            string ContentBase = @"IP_SERV = 192.168.1.70
+
+            string ContentBase = @"IP_SERV = 0.0.0.0
 PORT = 5000";
             File.WriteAllText(filePath,ContentBase);
             Console.WriteLine("Please Setup .env File");

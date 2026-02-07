@@ -72,8 +72,8 @@ internal class Program
             }
         }
         try {
-            #warning Replace ip
-            var clientTest = new FLCDowloader("http://192.168.1.50:5000", false);
+          
+            var clientTest = new FLCDowloader($"http://{connection.Ip_Serv}:{connection.Port}", false);
         }
         catch (Exceptions.NoAvaibleConnectToServer)
         {
@@ -186,7 +186,7 @@ internal class Program
                 }
             }
             if (status) {
-//#error Check This pls)
+
                 PullAudioList.AddToList(AudioName);
                 Console.BackgroundColor = ConsoleColor.Green;
                 Console.WriteLine("PASS");

@@ -9,6 +9,7 @@ namespace FLCDownloaderAudio
 {
     public class FLCDowloader
     {
+        bool _IsCheck = false;
         public readonly HttpClient httpClient;
         public FLCDowloader(string HttpURL, bool SkipCheckConnection) {
             httpClient = new HttpClient
@@ -25,13 +26,6 @@ namespace FLCDownloaderAudio
                 
                     
                 #if CheckAliveConnect
-                Console.WriteLine("iswork");
-                Task.Run(async () => {
-                    while(true){
-                        Task.Delay(300);
-                       await CheckAlive();
-                    }
-                });
                 
                 #endif
 
@@ -47,6 +41,8 @@ namespace FLCDownloaderAudio
                 Environment.Exit(-2);
             }
         }
+
+
 
         public async Task DownloadFlcAsync(string name, string FilePath) {
             try
@@ -65,6 +61,14 @@ namespace FLCDownloaderAudio
             await using var file = System.IO.File.Create(FilePath);
 
             await stream.CopyToAsync(file);
+            //if (!_IsCheck) {
+            //    while (true)
+            //    {
+            //        await Task.Delay(300);
+            //        await CheckAlive();
+            //    }
+            //}
+
         }
 
         public async Task<List<string>> GetMusicListAsync() {

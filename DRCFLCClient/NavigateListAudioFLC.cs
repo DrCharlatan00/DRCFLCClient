@@ -38,7 +38,7 @@ public static class NavigateListAudio
                     return items[currentIndex] as string;
                     break;
                 case ConsoleKey.Escape:
-                #warning Check Why not work List Audio output
+              
                     Console.WriteLine("\n Exit I mode");
                     Console.Clear();    
                     foreach (var Audio in items)
