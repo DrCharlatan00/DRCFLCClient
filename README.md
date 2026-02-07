@@ -1,4 +1,4 @@
-**You need DRCFLCServer to use client**
+**You need DRCFLCServer to use client** [Link](https://github.com/DrCharlatan00/DRCFLCServer/tree/master)
 
 # This application is designed to store .flac files on a server or another storage location.
 Before launching the app, you must specify the IP address and port configured in DRCFLCServer. Additionally, make sure you have foobar2000 installed—once that’s done, the application is ready to use.
