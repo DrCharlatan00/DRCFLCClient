@@ -20,8 +20,9 @@ namespace FLCDownloaderAudio
             if (SkipCheckConnection) return;
             try
             {
-                var dt = httpClient.GetStringAsync("/alive");
-                if (dt is null) {
+                var dt =  httpClient.GetStringAsync("/alive");
+                Task.Delay(500);
+                if (dt.Result is null) {
                     throw new Exceptions.NoAvaibleConnectToServer();
                 }
                 
