@@ -160,7 +160,9 @@ internal class Program
                 }
                 catch
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Cancel delete files: Files in use");
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
             }
             else if (AudioName == "list")
