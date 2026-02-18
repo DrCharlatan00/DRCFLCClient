@@ -148,13 +148,20 @@ internal class Program
             else if (AudioName.ToLower() == "rm")
             {
                 string[] flacFiles = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.flac");
-                foreach (var item in flacFiles)
+                try
                 {
-                    Console.WriteLine($"Remove Files: {item}");
-                    File.Delete(item); //this
-#warning Add Try catch to another proccess
+                    foreach (var item in flacFiles)
+                    {
+                        Console.WriteLine($"Remove Files: {item}");
+                        File.Delete(item); //this
+                    }
+
+                    continue;
                 }
-                continue;
+                catch
+                {
+                    Console.WriteLine("Cancel delete files: Files in use");
+                }
             }
             else if (AudioName == "list")
             {
