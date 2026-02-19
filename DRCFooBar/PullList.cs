@@ -31,7 +31,7 @@ namespace DRCFLCClient
         {
             var args = string.Join(" ", PullNames.Select(f => $"\"{f}\""));
             
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) { 
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) { //start whis foobar Windows
                 Console.WriteLine("Pushing");
                 Process.Start(new ProcessStartInfo { FileName = @"C:\Program Files\foobar2000\foobar2000.exe", Arguments = args, UseShellExecute = true });
                 Console.WriteLine("End Push");

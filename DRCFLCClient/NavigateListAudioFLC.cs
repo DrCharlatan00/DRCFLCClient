@@ -8,7 +8,7 @@ public static class NavigateListAudio
     {
         if (items == null || items.Count == 0)
         {
-            Console.WriteLine("Список пуст.");
+            Console.WriteLine("List Is Null.");
             return "";
         }
 

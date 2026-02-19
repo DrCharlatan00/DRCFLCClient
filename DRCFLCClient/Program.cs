@@ -118,7 +118,7 @@ internal class Program
             var AudioName = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(AudioName))
             {
-                Console.WriteLine("No pls again");
+                Console.WriteLine("Text is null, please write again");
                 continue;
             }
             else if (AudioName.ToLower() == "exit" || AudioName.ToLower() == "e") {
@@ -147,23 +147,19 @@ internal class Program
             }
             else if (AudioName.ToLower() == "rm")
             {
-                string[] flacFiles = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.flac");
-                try
+                var answ = Comander.CommanderExec(EnumParamtr.REMOVE_FILES);
+                switch (answ.Answer)
                 {
-                    foreach (var item in flacFiles)
-                    {
-                        Console.WriteLine($"Remove Files: {item}");
-                        File.Delete(item); //this
-                    }
-
-                    continue;
+                    case Comander.EnumAnswersReturnCommander.Skip:
+                        Console.WriteLine(answ.Messange);
+                        break;
+                    case Comander.EnumAnswersReturnCommander.Error:
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.WriteLine(answ.Messange);
+                        Console.ForegroundColor = ConsoleColor.White;
+                        break;
                 }
-                catch
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Cancel delete files: Files in use");
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
+                continue;
             }
             else if (AudioName == "list")
             {
