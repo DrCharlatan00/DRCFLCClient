@@ -26,12 +26,12 @@ jobs:
 
     - name: Publish Windows build
       run: |
-        dotnet publish ./DRCFLCClient.csproj `
-          -c Release `
-          -r win-x64 `
-          --self-contained true `
-          /p:PublishSingleFile=true `
-          -o publish
+        dotnet publish ./DRCFLCClient/DRCFLCClient.csproj `
+        -c Release `
+        -r win-x64 `
+        --self-contained true `
+        /p:PublishSingleFile=true `
+        -o publish
 
     - name: Create ZIP archive
       run: |
