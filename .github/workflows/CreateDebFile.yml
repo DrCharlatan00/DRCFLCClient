@@ -1,0 +1,57 @@
+name: Build DEB package
+
+on:
+  push:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+env:
+  VERSION: 1.2
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET 10
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Publish project
+      run: |
+       dotnet publish -c Release -r linux-x64 -o publish
+
+    - name: Install fpm
+      run: |
+        sudo apt update
+        sudo apt install ruby ruby-dev build-essential -y
+        sudo gem install --no-document fpm
+
+    - name: Create DEB package
+      run: |
+        mkdir -p package/usr/local/bin
+        cp publish/DRCFLCClient package/usr/local/bin/drcflcclient
+        chmod +x package/usr/local/bin/drcflcclient
+
+        fpm -s dir -t deb \
+          -n drcflcclient \
+          -v $VERSION \
+          --architecture amd64 \
+          --description "Flac client for debian like systems" \
+          --maintainer "dr.charlatan@vk.com" \
+          --prefix=/ \
+          -C package \
+          usr
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: deb-package
+        path: "*.deb"
