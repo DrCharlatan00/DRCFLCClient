@@ -37,8 +37,8 @@ jobs:
     - name: Create DEB package
       run: |
         mkdir -p package/usr/local/bin
-        cp publish/MyApp package/usr/local/bin/myapp
-        chmod +x package/usr/local/bin/myapp
+        cp publish/DRCFLCClient package/usr/local/bin/drcflcclient
+        chmod +x package/usr/local/bin/drcflcclient
 
         fpm -s dir -t deb \
           -n drcflcclient \
