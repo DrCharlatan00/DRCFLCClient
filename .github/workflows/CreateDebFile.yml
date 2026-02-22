@@ -38,7 +38,7 @@ jobs:
       run: |
         mkdir -p package/usr/local/bin
         cp publish/* package/usr/local/bin/
-        chmod +x package/usr/local/bin/drcflcclient
+        chmod +x package/usr/local/bin/DRCFLCClient
 
         fpm -s dir -t deb \
           -n drcflcclient \
