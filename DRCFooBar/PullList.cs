@@ -10,10 +10,14 @@ namespace DRCFLCClient
     {
         public List<string> PullNames = new List<string>();
 
-        public async void SendToPull(bool Local) {
+        public async Task SendToPull(bool Local) {
             foreach (var item in PullNames)
             {
-                await AddTrackAsync(item);
+                var answ = await AddTrackAsync(item);
+                if (!answ.Ok)
+                {
+                    Console.WriteLine(answ.err);
+                }
             }
             PullNames.Clear();
             
@@ -43,46 +47,23 @@ namespace DRCFLCClient
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                #error Not Work Dot use
                 try
                 {
                     if (!File.Exists(name))
                         return (false, $"File not found: {name}");
-
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                    {
-                        // Windows: foobar2000
-                        var startInfo = new ProcessStartInfo
+                    
+                        // Linux: Audacious
+                        var PushInfo = new ProcessStartInfo
                         {
-                            FileName = @"C:\Program Files\foobar2000\foobar2000.exe",
-                            UseShellExecute = true
-                        };
-                        // foobar принимает файлы просто как аргументы
-                        startInfo.ArgumentList.Add(name);
-
-                        Process.Start(startInfo);
-                        Console.WriteLine($"[Windows] Pushed to foobar2000: {name}");
-                    }
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                    {
-                        // Linux: VLC
-
-
-                        var startInfo = new ProcessStartInfo
-                        {
-                            FileName = "vlc",
+                            FileName = "audacious",
                             UseShellExecute = false
                         };
 
-                        // Только ArgumentList - никаких Arguments!
-                        startInfo.ArgumentList.Add("--playlist-enqueue");
-                        startInfo.ArgumentList.Add("--no-video-title-show");
-                        startInfo.ArgumentList.Add(name); // Путь к файлу добавится корректно, даже с пробелами
+                        PushInfo.ArgumentList.Add("--enqueue");
+                        PushInfo.ArgumentList.Add(name);
 
-                        using var process = Process.Start(startInfo);
-                        Console.WriteLine($"[Linux] Enqueued to VLC: {name}");
-                    }
-
+                        using var PushProcess = Process.Start(PushInfo);
+                        return (true,null);
                     
                 }
                 catch (Exception ex)

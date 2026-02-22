@@ -8,8 +8,8 @@ class EnvReader
         if (!File.Exists(filePath))
         {
 
-            string ContentBase = @"IP_SERV = 0.0.0.0
-PORT = 5000";
+            string ContentBase = @"IP_SERV=0.0.0.0
+PORT=5000";
             File.WriteAllText(filePath,ContentBase);
             Console.WriteLine("Please Setup .env File");
             throw new FileNotFoundException($"The file '{filePath}' does not exist.");
