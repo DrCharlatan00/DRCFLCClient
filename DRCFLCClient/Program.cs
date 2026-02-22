@@ -42,10 +42,19 @@ internal class Program
 
     private static async Task Main(string[] args)
     {
+       
         Console.InputEncoding = Encoding.UTF8;
         Console.OutputEncoding = Encoding.UTF8;
         //Task.Run(()=> {});
         PullAudioList = new();
+        
+        //signature of events
+        PullAudioList.EventPullingTrackError += () => {  
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("Error on pulling ");
+            Environment.Exit(-55);
+            
+        };
         ConnectionSetting connection = new();
 
 #if DEBUG
@@ -203,5 +212,9 @@ internal class Program
                 
            
         }
+
+       
     }
+    
+    
 }

@@ -8,6 +8,10 @@ namespace DRCFLCClient
 {
     public class PullList
     {
+        public delegate void TrackActions();
+        public event TrackActions EventPullingTrackError;
+        
+        
         public List<string> PullNames = new List<string>();
 
         public async Task SendToPull(bool Local) {
@@ -71,6 +75,7 @@ namespace DRCFLCClient
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine($"Error starting player: {ex.Message}");
                     Console.ForegroundColor = ConsoleColor.White;
+                    EventPullingTrackError.Invoke();
                     return (false, ex.Message);
                 }
 

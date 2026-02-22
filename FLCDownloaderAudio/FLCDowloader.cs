@@ -1,4 +1,4 @@
-﻿#define CheckAliveConnect
+﻿//#define CheckAliveConnect
 
 
 using System.Net.Http;
@@ -27,9 +27,7 @@ namespace FLCDownloaderAudio
                 }
                 
                     
-                #if CheckAliveConnect
                 
-                #endif
 
                 
 
