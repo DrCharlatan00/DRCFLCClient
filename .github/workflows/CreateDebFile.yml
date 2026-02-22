@@ -26,10 +26,7 @@ jobs:
 
     - name: Publish project
       run: |
-        dotnet publish -c Release -r linux-x64 \
-        --self-contained true \
-        /p:PublishSingleFile=true \
-        -o publish
+       dotnet publish -c Release -r linux-x64 -o publish
 
     - name: Install fpm
       run: |
