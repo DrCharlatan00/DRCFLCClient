@@ -195,7 +195,7 @@ internal class Program
                     status = false;
                 }
             }
-            else {
+            else { //review this
                 try
                 {
                     await client.DownloadFlcAsync(AudioName += ".flac", $" {AppDomain.CurrentDomain.BaseDirectory} \\ {AudioName.ToLower()}.flac");
@@ -210,7 +210,7 @@ internal class Program
 
                 PullAudioList.AddToList(AudioName); 
                 Console.BackgroundColor = ConsoleColor.Green;
-                Console.WriteLine("PASS");
+                Console.WriteLine("Successful Push ");
                 Task.Delay(500);
                 Console.BackgroundColor = ConsoleColor.Black;
             }
