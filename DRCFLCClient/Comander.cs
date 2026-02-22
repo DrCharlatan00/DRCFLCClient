@@ -39,7 +39,7 @@ public class Comander
                 catch
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Cancel delete files: Files in use");
+                    //Console.WriteLine("Cancel delete files: Files in use");
                     Console.ForegroundColor = ConsoleColor.White;
                     return (EnumAnswersReturnCommander.Error,"Catch, File is use another process or unexpected error ");
                 }

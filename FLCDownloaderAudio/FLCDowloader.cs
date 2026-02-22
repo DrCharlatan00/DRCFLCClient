@@ -10,8 +10,17 @@ namespace FLCDownloaderAudio
 {
     public class FLCDowloader
     {
+        
+        //delegate
+        public delegate void ErrorHandler();
+        
+        //events
+        public event ErrorHandler EventServerDead;
+        
         bool _IsCheck = false;
         public readonly HttpClient httpClient;
+        
+        
         public FLCDowloader(string HttpURL, bool SkipCheckConnection) {
             httpClient = new HttpClient
             {
@@ -51,7 +60,7 @@ namespace FLCDownloaderAudio
             }
             catch
             {
-                throw new Exceptions.NoAvaibleConnectToServer("Err whis connect to Flac Server");
+                EventServerDead.Invoke();
             }
             
             var response = await httpClient.GetAsync($"audio/{name}", HttpCompletionOption.ResponseHeadersRead);

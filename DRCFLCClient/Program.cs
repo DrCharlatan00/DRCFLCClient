@@ -52,7 +52,6 @@ internal class Program
         PullAudioList.EventPullingTrackError += () => {  
             Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine("Error on pulling ");
-            Environment.Exit(-55);
             
         };
         ConnectionSetting connection = new();
@@ -99,7 +98,12 @@ internal class Program
         }
 
         var client = new FLCDowloader($"http://{connection.Ip_Serv}:{connection.Port}", true);
-
+        client.EventServerDead += () =>
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("Connect to server died");
+            Environment.Exit(500);
+        };
         try
         {
             ListAudio = await client.GetMusicListAsync();
