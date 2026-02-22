@@ -127,7 +127,7 @@ internal class Program
         
         while (true)
         {
-            Console.Write("Write Audio: ");
+            Console.Write("Write Audio or Command: ");
             var AudioName = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(AudioName))
             {
@@ -149,10 +149,10 @@ internal class Program
 
                 continue;
             }
-            else if (AudioName.ToLower() == "push" || AudioName.ToLower() == "p") {
+           /* else if (AudioName.ToLower() == "push" || AudioName.ToLower() == "p") {
                 PullAudioList.SendToPull(false);
                 continue;
-            }
+            }*/
             else if (AudioName.ToLower() == "lpush" || AudioName.ToLower() == "lp")
             {
                 PullAudioList.SendToPull(true);
@@ -208,9 +208,10 @@ internal class Program
             }
             if (status) {
 
-                PullAudioList.AddToList(AudioName);
+                PullAudioList.AddToList(AudioName); 
                 Console.BackgroundColor = ConsoleColor.Green;
                 Console.WriteLine("PASS");
+                Task.Delay(500);
                 Console.BackgroundColor = ConsoleColor.Black;
             }
                 
