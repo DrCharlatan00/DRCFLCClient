@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-    
+namespace DRCFLCClient;
 
 public static class NavigateListAudio
 {
-    public static string NavigateList<T>(IList<T> items)
+    public static string? NavigateList<T>(IList<T> items)
     {
-        if (items == null || items.Count == 0)
+        if (items.Count == 0)
         {
             Console.WriteLine("List Is Null.");
             return "";

@@ -2,16 +2,17 @@
 //    #define NoUseUnsafeCode
 
 using System.Runtime.InteropServices;
-using DRCFLCClient;
-using FLCDownloaderAudio;
 using System.Text;
+using FLCDownloaderAudio;
+
+namespace DRCFLCClient;
 
 internal class Program
 {
 
     public struct ConnectionSetting
     {
-        public string Ip_Serv ;
+        public string Ip_Serv;
         public string Port;
         public ConnectionSetting()
         {
@@ -47,8 +48,8 @@ PORT=5000";
     Port = "5213";
     return;
 #endif
-        Ip_Serv = Environment.GetEnvironmentVariable("IP_SERV") ?? "localhost";
-        Port = Environment.GetEnvironmentVariable("PORT") ?? "5213";
+            Ip_Serv = Environment.GetEnvironmentVariable("IP_SERV") ?? "localhost";
+            Port = Environment.GetEnvironmentVariable("PORT") ?? "5213";
             if (string.IsNullOrWhiteSpace(Ip_Serv))
             {
                 throw new Exception($"{nameof(Ip_Serv)} is null");
@@ -185,10 +186,10 @@ PORT=5000";
 
                 continue;
             }
-           /* else if (AudioName.ToLower() == "push" || AudioName.ToLower() == "p") {
-                PullAudioList.SendToPull(false);
-                continue;
-            }*/
+            /* else if (AudioName.ToLower() == "push" || AudioName.ToLower() == "p") {
+            PullAudioList.SendToPull(false);
+            continue;
+        }*/
             else if (AudioName.ToLower() == "lpush" || AudioName.ToLower() == "lp")
             {
                 try

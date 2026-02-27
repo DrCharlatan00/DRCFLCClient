@@ -1,5 +1,4 @@
-using System;
-using System.IO;
+namespace DRCFLCClient;
 
 class EnvReader
 {
@@ -30,4 +29,3 @@ PORT=5000";
         
     }
 }
-
