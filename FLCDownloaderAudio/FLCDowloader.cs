@@ -54,6 +54,11 @@ namespace FLCDownloaderAudio
 
 
         public async Task DownloadFlcAsync(string name, string FilePath) {
+            if (name == "Skip")
+            {
+                return;
+            }
+
             try
             {
                 await httpClient.GetAsync("/alive");

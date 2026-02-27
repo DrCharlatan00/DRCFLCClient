@@ -180,7 +180,16 @@ internal class Program
             }*/
             else if (AudioName.ToLower() == "lpush" || AudioName.ToLower() == "lp")
             {
-                PullAudioList.SendToPull(true);
+                try
+                {
+                    await PullAudioList.SendToPull(true);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error on local push ");
+                    throw;
+                }
+                
                 continue;
             }
             else if (AudioName.ToLower() == "rm")
@@ -213,7 +222,7 @@ internal class Program
             if (AudioName.Contains(".flac")) {
                 try
                 {
-                    await client.DownloadFlcAsync(AudioName, $"{AppDomain.CurrentDomain.BaseDirectory} \\ {AudioName.ToLower()}");
+                    await client.DownloadFlcAsync(AudioName, $"{AppDomain.CurrentDomain.BaseDirectory} \\ {AudioName.ToLower() ?? "Skip"}");
                 }
                 catch {
                     Console.WriteLine("No find or Error on FLCServer");
@@ -223,7 +232,7 @@ internal class Program
             else { //review this
                 try
                 {
-                    await client.DownloadFlcAsync(AudioName += ".flac", $" {AppDomain.CurrentDomain.BaseDirectory} \\ {AudioName.ToLower()}.flac");
+                    await client.DownloadFlcAsync(AudioName += ".flac", $" {AppDomain.CurrentDomain.BaseDirectory} \\ {AudioName.ToLower() ?? "Skip"}.flac");
                 }
                 catch
                 {
