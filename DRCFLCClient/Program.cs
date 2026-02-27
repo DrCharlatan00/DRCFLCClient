@@ -1,5 +1,7 @@
 ﻿//#define LoadFromCode
 //    #define NoUseUnsafeCode
+
+using System.Runtime.InteropServices;
 using DRCFLCClient;
 using FLCDownloaderAudio;
 using System.Text;
@@ -13,19 +15,42 @@ internal class Program
         public string Port;
         public ConnectionSetting()
         {
-            EnvReader.Load(".env");
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                EnvReader.Load(".env");
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                try
+                {
+                    if (!Directory.Exists("@/etc/drflcclient"))
+                    {
+                        Directory.CreateDirectory(@"/etc/drflcclient");
+                    
+                    }
+                }
+                catch (UnauthorizedAccessException ex )
+                {
+                    Console.WriteLine(@"Please open in sudo mode or create Directory  '/etc/drflcclient' and create File '/etc/drflcclient'");
+                    //throw;
+                    Environment.Exit(-150);
+                }
+               
+            }
+
+            
 #if LoadFromCode
     Ip_Serv = "localhost";
     Port = "5213";
     return;
 #endif
-        Ip_Serv = Environment.GetEnvironmentVariable("IP_SERV");
-        Port = Environment.GetEnvironmentVariable("PORT");
-        if (string.IsNullOrWhiteSpace(Ip_Serv))
+        Ip_Serv = Environment.GetEnvironmentVariable("IP_SERV") ?? "localhost";
+        Port = Environment.GetEnvironmentVariable("PORT") ?? "5213";
+            if (string.IsNullOrWhiteSpace(Ip_Serv))
             {
                 throw new Exception($"{nameof(Ip_Serv)} is null");
             }
-        if (string.IsNullOrWhiteSpace(Port))
+            if (string.IsNullOrWhiteSpace(Port))
             {
                 throw new Exception($"{nameof(Port)} is null");
             }
@@ -88,7 +113,7 @@ internal class Program
         }
         catch (Exceptions.NoAvaibleConnectToServer)
         {
-            Console.WriteLine("No Avaible to connect Flac server");
+            Console.WriteLine("No Available to connect Flac server");
         }
         catch (Exception ex)
         {
@@ -138,7 +163,7 @@ internal class Program
                 Environment.Exit(0);
             }
             else if (AudioName.ToLower() == "i") {
-                string audio = NavigateListAudio.NavigateList<string>(AudioNames);
+                string audio = NavigateListAudio.NavigateList(AudioNames);
                 foreach (var Audio in AudioNames)
                 {
                     if (audio == Audio) {
@@ -155,7 +180,16 @@ internal class Program
             }*/
             else if (AudioName.ToLower() == "lpush" || AudioName.ToLower() == "lp")
             {
-                PullAudioList.SendToPull(true);
+                try
+                {
+                    await PullAudioList.SendToPull(true);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error on local push ");
+                    throw;
+                }
+                
                 continue;
             }
             else if (AudioName.ToLower() == "rm")
@@ -188,7 +222,7 @@ internal class Program
             if (AudioName.Contains(".flac")) {
                 try
                 {
-                    await client.DownloadFlcAsync(AudioName, $"{AppDomain.CurrentDomain.BaseDirectory} \\ {AudioName.ToLower()}");
+                    await client.DownloadFlcAsync(AudioName, $"{AppDomain.CurrentDomain.BaseDirectory} \\ {AudioName.ToLower() ?? "Skip"}");
                 }
                 catch {
                     Console.WriteLine("No find or Error on FLCServer");
@@ -198,7 +232,7 @@ internal class Program
             else { //review this
                 try
                 {
-                    await client.DownloadFlcAsync(AudioName += ".flac", $" {AppDomain.CurrentDomain.BaseDirectory} \\ {AudioName.ToLower()}.flac");
+                    await client.DownloadFlcAsync(AudioName += ".flac", $" {AppDomain.CurrentDomain.BaseDirectory} \\ {AudioName.ToLower() ?? "Skip"}.flac");
                 }
                 catch
                 {
@@ -211,7 +245,7 @@ internal class Program
                 PullAudioList.AddToList(AudioName); 
                 Console.BackgroundColor = ConsoleColor.Green;
                 Console.WriteLine("Successful Push ");
-                Task.Delay(500);
+                _ = Task.Delay(500);
                 Console.BackgroundColor = ConsoleColor.Black;
             }
                 

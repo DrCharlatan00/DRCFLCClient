@@ -12,7 +12,7 @@ namespace DRCFLCClient
         public event TrackActions EventPullingTrackError;
         
         
-        public List<string> PullNames = new List<string>();
+        public List<string> PullNames = new();
 
         public async Task SendToPull(bool Local) {
             foreach (var item in PullNames)
