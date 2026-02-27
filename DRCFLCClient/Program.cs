@@ -23,11 +23,14 @@ internal class Program
             {
                 try
                 {
-                    if (!Directory.Exists("@/etc/drflcclient"))
+                    if (!Directory.Exists(@"/etc/drflcclient"))
                     {
                         Directory.CreateDirectory(@"/etc/drflcclient");
-                    
+                        string ContentBase = @"IP_SERV=0.0.0.0
+PORT=5000";
+                        File.WriteAllText(@"/etc/drflcclient/.env",ContentBase);
                     }
+                    EnvReader.Load(@"/etc/drflcclient/.env");
                 }
                 catch (UnauthorizedAccessException ex )
                 {
