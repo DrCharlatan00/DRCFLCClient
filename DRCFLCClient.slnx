@@ -1,5 +1,5 @@
 <Solution>
   <Project Path="DRCFLCClient/DRCFLCClient.csproj" />
-  <Project Path="DRCFooBar/DRCFooBar.csproj" />
+  <Project Path="DRCPull\DRCPull.csproj" />
   <Project Path="FLCDownloaderAudio/FLCDownloaderAudio.csproj" />
 </Solution>

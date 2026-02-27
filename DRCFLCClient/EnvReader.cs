@@ -27,6 +27,7 @@ PORT=5000";
             var value = parts[1].Trim();
             Environment.SetEnvironmentVariable(key, value);
         }
+        
     }
 }
 
