@@ -16,6 +16,7 @@ namespace FLCDownloaderAudio
         
         //events
         public event ErrorHandler EventServerDead;
+        public event ErrorHandler NullListSounds;
         
         bool _IsCheck = false;
         public readonly HttpClient httpClient;
@@ -89,7 +90,7 @@ namespace FLCDownloaderAudio
             var list = await httpClient.GetFromJsonAsync<List<string>>("/list");
             if (list is null)
             {
-                throw new Exceptions.NullListAvaibleFlacMusic("Null list Music, Check Music folder!");
+                NullListSounds.Invoke();
             }
             return list;
         }

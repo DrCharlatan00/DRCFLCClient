@@ -97,14 +97,16 @@ PORT=5000";
                 {
                     var clientList = new FLCDowloader($"http://{connection.Ip_Serv}:{connection.Port}", false);
                     ListAudio = await clientList.GetMusicListAsync();
-                    if (ListAudio is not null)
+                    if (ListAudio.Count == 0)
                     {
-                        int count = 0;
-                        foreach (var Audio in ListAudio)
-                        {
-                            count++;
-                            Console.WriteLine($"№ {count}: {Audio}");
-                        }
+                        Console.WriteLine("List is null. Exit ");
+                        Environment.Exit(-12);
+                    }
+                    int count = 0;
+                    foreach (var Audio in ListAudio)
+                    {
+                        count++;
+                        Console.WriteLine($"№ {count}: {Audio}");
                     }
                 }
                 
@@ -130,7 +132,13 @@ PORT=5000";
         {
             Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine("Connect to server died");
-            Environment.Exit(500);
+            Environment.Exit(-500);
+        };
+        client.NullListSounds += () =>
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("On Server List is null. Please restart server ");
+            Environment.Exit(-501);
         };
         try
         {
